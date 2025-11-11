@@ -10,7 +10,7 @@ const knex = require("knex")({ // require knex library
         host: "localhost",
         user: "postgres",
         password: "admin",
-        database: "________",
+        database: "foodpantry",
         port: 5432
     }
 });
