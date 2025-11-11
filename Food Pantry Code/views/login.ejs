@@ -5,11 +5,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Community Food Pantry Tracker – Login</title>
+    <link rel="stylesheet" href="/css/auth.css">
+    <style>
+    :root { --primary:#2c7a7b; --accent:#319795; --bg:#f7fafc; --white:#fff; --text:#2d3748; --radius:12px; }
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; margin:0; background:var(--bg); display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .card { background:var(--white); width:100%; max-width:400px; padding:40px 32px; border-radius:var(--radius); box-shadow:0 8px 24px rgba(0,0,0,.08); }
+    h1 { margin:0 0 8px; color:var(--primary); font-size:1.5rem; }
+    p.sub { margin:0 0 24px; color:#4a5568; font-size:.95rem; }
+    form { display:flex; flex-direction:column; gap:14px; }
+    label { font-size:.9rem; color:#4a5568; }
+    input, select { width:100%; padding:12px 14px; border:1px solid #cbd5e0; border-radius:var(--radius); font-size:1rem; outline:none; }
+    input:focus, select:focus { border-color:var(--accent); }
+    .btn { background:var(--primary); color:#fff; border:none; padding:12px; font-size:1rem; border-radius:var(--radius); cursor:pointer; }
+    .btn:hover { background:var(--accent); }
+    /* .error { display:<%= typeof error !== 'undefined' && error ? 'block':'none' %>; color:#e53e3e; font-size:.9rem; } */
+    .links { margin-top:16px; display:flex; justify-content:space-between; font-size:.9rem; }
+    .links a { color:var(--accent); text-decoration:none; }
+    .links a:hover { text-decoration:underline; }
+    .brand { text-align:center; margin-bottom:16px; }
+    .brand a { color:#4a5568; text-decoration:none; }
+    </style>
 </head>
 <body>
-    
+    <main class="card" aria-labelledby="loginTitle">
+    <div class="brand"><a href="/">← Back to Home</a></div>
+    <h1 id="loginTitle">Sign in</h1>
+    <p class="sub">Access the Community Food Pantry Tracker</p>
+
+    <!-- For now, the form action is correct but backend may not exist yet -->
+    <form action="/database" method="POST" novalidate>
+        <div>
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" placeholder="Enter your username" required />
+        </div>
+        <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Enter your password" required />
+        </div>
+
+        <!-- Optional: include role selection to demo redirects later -->
+        <!-- Remove this once the server derives role from the DB -->
+        <!-- <div>
+        <label for="role">Role (demo only)</label>
+        <select id="role" name="role">
+            <option value="pantry_staff">Pantry Staff</option>
+            <option value="donor">Donor</option>
+            <option value="volunteer">Volunteer</option>
+            <option value="admin">Admin</option>
+        </select>
+        </div> -->
+
+        <p class="error"><%= error || 'Invalid username or password.' %></p>
+
+        <button class="btn" type="submit">Sign in</button>
+    </form>
+
+    <div class="links">
+        <a href="#">Create account</a>
+        <a href="#">Forgot password?</a>
+    </div>
+    </main>
+
+    <!-- Optional tiny mock: remove this once backend is wired -->
+    <script>
+    // Comment out this block before real backend use
+    // document.querySelector('form').addEventListener('submit', function (e) {
+    //     e.preventDefault();
+    //     const role = document.getElementById('role').value;
+    //     const map = {
+    //     admin: '/admin',
+    //     pantry_staff: '/dashboard',
+    //     donor: '/donations',
+    //     volunteer: '/volunteer'
+    //     };
+    //     // Simulate success path only for screenshots/demos:
+    //     window.location.href = map[role] || '/dashboard';
+    // });
+    </script>
 </body>
 </html>

@@ -30,17 +30,17 @@ app.get("/", (req, res) => {
 });
 
 // Create route for customer sign up page 
-app.get("/", (req, res) => {
+app.get("/signUp", (req, res) => {
     res.render("signUp")
 });
 
 // Create route for employee login page 
-app.get("/", (req, res) => {
-    res.render("login")
+app.get("/login", (req, res) => {
+    res.render("login",{ error: null })
 });
 
 // Create route for database page 
-app.get("/", (req, res) => {
+app.post("/database", (req, res) => {
     res.render("database")
 });
 
