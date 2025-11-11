@@ -1,0 +1,26 @@
+{
+  "name": "food-pantry",
+  "version": "1.0.0",
+  "description": "This webpage will allow food pantry businesses to managge customer/order info as well as allow users to sign up. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Paris-Jane/food-pantry.git"
+  },
+  "author": "Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Paris-Jane/food-pantry/issues"
+  },
+  "homepage": "https://github.com/Paris-Jane/food-pantry#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "knex": "^3.1.0",
+    "pg": "^8.16.3",
+    "save": "^2.9.0"
+  }
+}
