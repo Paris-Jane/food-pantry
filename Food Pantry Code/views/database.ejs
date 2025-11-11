@@ -6,11 +6,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Food Pantry Tracker - Database Page</title>
+  <meta charset="UTF-8">
+  <title>Database Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .tab {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 6px;
+      background: #f2f2f2;
+    }
+
+    .tab.active {
+      background: #007bff;
+      color: white;
+    }
+
+    .search-bar input {
+      padding: 0.5rem;
+      width: 200px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #f8f8f8;
+    }
+
+    .actions button {
+      margin-right: 0.3rem;
+    }
+  </style>
 </head>
 <body>
-    
+
+  <h2>Database Viewer</h2>
+
+  <div class="tabs">
+    <% const tables = ['customers', 'employees', 'orders']; %>
+    <% tables.forEach(tab => { %>
+      <div class="tab <%= currentTable === tab ? 'active' : '' %>"
+           onclick="window.location.href='/database?table=<%= tab %>'">
+        <%= tab %>
+      </div>
+    <% }) %>
+  </div>
+
+  <form class="search-bar" method="GET" action="/database">
+    <input type="hidden" name="table" value="<%= currentTable %>">
+    <input type="text" name="search" placeholder="Search..." value="<%= searchTerm || '' %>">
+    <button type="submit">Search</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <% if (records.length > 0) { %>
+          <% Object.keys(records[0]).forEach(key => { %>
+            <th><%= key %></th>
+          <% }) %>
+          <% if (user && user.role === 'admin') { %>
+            <th>Actions</th>
+          <% } %>
+        <% } else { %>
+          <th>No records found.</th>
+        <% } %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% records.forEach(record => { %>
+        <tr>
+          <% Object.values(record).forEach(value => { %>
+            <td><%= value %></td>
+          <% }) %>
+          <% if (user && user.role === 'admin') { %>
+            <td class="actions">
+              <form method="GET" action="/edit/<%= currentTable %>/<%= record.id %>" style="display:inline;">
+                <button type="submit">Edit</button>
+              </form>
+              <form method="POST" action="/delete/<%= currentTable %>/<%= record.id %>" style="display:inline;">
+                <button type="submit" onclick="return confirm('Delete this record?')">Delete</button>
+              </form>
+            </td>
+          <% } %>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
 </body>
 </html>

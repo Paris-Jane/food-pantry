@@ -40,8 +40,25 @@ app.get("/login", (req, res) => {
 });
 
 // Create route for database page 
-app.post("/database", (req, res) => {
-    res.render("database")
+app.get("/database", async (req, res) => {
+    try {
+        const { table = "customers", search = "" } = req.query;
+
+        // get table data
+        let records = await knex(table).modify((qb) => {
+            if (search) qb.whereILike("name", `%${search}%`);
+        });
+
+        res.render("database", {
+            currentTable: table,
+            records,
+            user: { role: "admin" }, // temporarily mock admin user
+            searchTerm: search
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching data from database");
+    }
 });
 
 // Tells server to start listening for user & display text in command line
