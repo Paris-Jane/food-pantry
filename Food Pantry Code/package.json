@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/Paris-Jane/food-pantry#readme",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "knex": "^3.1.0",
     "pg": "^8.16.3",
     "save": "^2.9.0"

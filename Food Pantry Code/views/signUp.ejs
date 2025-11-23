@@ -7,9 +7,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Food Pantry Tracker - Create Customer Page</title>
+    <title>Utah Food Bank Tracker - Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #e8f2f7;
+        }
+        
+        .title {
+            color: #2b7cb5;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .text {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2b7cb5 0%, #4a9fd8 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo a {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #094067;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .signup-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-label .required {
+            color: #e74c3c;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #2b7cb5;
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2b7cb5 0%, #4a9fd8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(43, 124, 181, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: #27ae60;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .success-title {
+            color: #27ae60;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .customer-id {
+            background: #f0f8ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 2px solid #2b7cb5;
+        }
+
+        .customer-id-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .customer-id-number {
+            color: #2b7cb5;
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .location-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .location-photo {
+            width: 100%;
+            height: 250px;
+            background: #ddd;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .location-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .location-address {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .location-address .location-name {
+            color: #2b7cb5;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .location-address .address-line {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .location-address .info-item {
+            display: block;
+            margin-top: 0.75rem;
+        }
+
+        .location-address .info-label {
+            color: #2b7cb5;
+            font-weight: 600;
+        }
+
+        .location-address a {
+            color: #2b7cb5;
+            text-decoration: none;
+        }
+
+        .location-address a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.75rem 2rem;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .signup-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo"><a href="/">Utah Food Bank Tracker</a></div>
+        <nav class="nav">
+            <a href="/login">Employee Login</a>
+            <a href="/signUp">Customer Signup</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="signup-card">
+
+            <!-- Sign-Up Form -->
+            <% if (!id) { %> 
+                <form id="signupForm" class="signup-form" action="/signUp" method="POST">
+                    <br><br>
+                    <h1 class="title">Recipient Sign-up</h1>
+                    <p class="text" style="text-align: center;">Please fill out the information below to register</p>
+
+                    <div class="form-group">
+                        <label class="form-label">First Name <span class="required">*</span></label>
+                        <input type="text" class="form-input" name="first_name" placeholder="Enter your first name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Last Name <span class="required">*</span></label>
+                        <input type="text" class="form-input" name="last_name" placeholder="Enter your last name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone Number <span class="required">*</span></label>
+                        <input type="tel" class="form-input" name="phone_num" placeholder="(555) 123-4567" required>
+                    </div>
+
+                    <div class="form-group">
+                            <label class="form-label">Email <span class="required">*</span></label>
+                        <input type="email" class="form-input" name="email" placeholder="your.email@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Location <span class="required">*</span></label>
+                        <select class="form-select" name="location" required>
+                            <option value="">Select a location</option>
+                            <option value="blanding">Blanding</option>
+                            <option value="salt-lake">Salt Lake</option>
+                            <option value="st-george">St. George</option>
+                            <option value="springville">Springville</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Registration</button>
+                </form>
+            <% } %>
+
+            <!-- Success Message -->
+            <% if (id) { %>
+                <div id="successMessage" class="success-message show">
+                    <div class="success-icon">✓</div>
+                    <h2 class="success-title">Thank you for signing up!</h2>
+                    
+                    <div class="customer-id">
+                        <div class="customer-id-label">Your Customer ID:</div>
+                        <div class="customer-id-number"><%= id %></div>
+                    </div>
+
+                    <div class="location-info">
+                        <div class="location-photo" id="locationPhoto">
+                            [Food Bank Photo]
+                        </div>
+                        <div class="location-address" id="locationDisplay"></div>
+                    </div>
+
+                    <a href="/" class="back-btn">Return to Home</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+
+    <script>
+        // Info for locations
+        const locations = {
+            'blanding': {
+                name: 'Blanding Food Bank',
+                address: '295 E 200 N',
+                city: 'Blanding, UT 84511',
+                phone: '(435) 674-5498',
+                hours: 'Mon-Fri 8am-5pm',
+                link: 'https://maps.app.goo.gl/2v7iTwSdZHuvtKJ98',
+                photo: '../photos/blanding.jpg'
+            },
+            'salt-lake': {
+                name: 'Salt Lake City Food Bank',
+                address: '3150 S 900 W',
+                city: 'South Salt Lake, UT 84119',
+                phone: '(801) 978-2452',
+                hours: 'Mon-Fri 8am-5pm',
+                link: 'https://maps.app.goo.gl/mPFJJs6xbKMm58VSA',
+                photo: '../photos/slc.jpg'
+            },
+            'st-george': {
+                name: 'St. George Food Bank',
+                address: '4416 River Rd',
+                city: 'St. George, UT 84790',
+                phone: '(435) 656-9122',
+                hours: 'Mon-Fri 8am-5pm',
+                link: 'https://maps.app.goo.gl/zCjHaV9Ur62bMWnV8',
+                photo: '../photos/stgeorge.jpg'
+            },
+            'springville': {
+                name: 'Springville Food Bank',
+                address: '1900 W 900 S',
+                city: 'Springville, UT 84663',
+                phone: '(801) 887-1277',
+                hours: 'Mon-Fri 8am-5pm',
+                link: 'https://maps.app.goo.gl/BZXP51WZ9tuK6zpY8',
+                photo: '../photos/springville.jpg'
+            }
+        };
     
+        // Value injected from the server
+        const serverLocation = "<%= selectedLocation || '' %>";
+    
+        if (serverLocation && locations[serverLocation]) {
+            const selectedLocation = locations[serverLocation];
+    
+            // Set the photo
+            document.getElementById('locationPhoto').innerHTML =
+                `<img src="${selectedLocation.photo}" alt="${selectedLocation.name}">`;
+    
+            // Set the location details
+            document.getElementById('locationDisplay').innerHTML = `
+                <span class="location-name">${selectedLocation.name}</span>
+                <a href="${selectedLocation.link}" target="_blank" class="address-line">
+                    ${selectedLocation.address}<br>
+                    ${selectedLocation.city}
+                </a>
+                <span class="info-item">
+                    <span class="info-label">Phone:</span> ${selectedLocation.phone}
+                </span>
+                <span class="info-item">
+                    <span class="info-label">Hours:</span> ${selectedLocation.hours}
+                </span>
+            `;
+        }
+    </script>
 </body>
 </html>

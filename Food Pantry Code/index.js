@@ -1,12 +1,15 @@
 // Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington
 // This code will help owners of food pantrys manage customers, emplolyees and orders.
 
-// require libraries
-const express = require("express"); // require express library
-let path = require("path"); // require path library
-const knex = require("knex")({ // require knex library
-    client: "pg", // connect to pg admin
-    connection: { // connect to the database info:
+// REQUIRE LIBRARIES AND STORE IN VARIABLE (if applicable): 
+require('dotenv').config(); // DOTENV: loads ENVIROMENT VARIABLES from .env file; Allows you to use process.env
+const express = require("express"); // EXPRESS: helps with web development 
+const session = require("express-session"); // EXPRESS SESSION: needed for session variable. Stored on the server to hold data; Essentially adds a new property to every req object that allows you to store a value per session.
+let path = require("path"); // PATH: helps create safe paths when working with file/folder locations 
+let bodyParser = require("body-parser"); // BODY-PARSER: Allows you to read the body of incoming HTTP requests and makes that data available on req.body
+const knex = require("knex")({ // KNEX: allows you to work with SQL databases
+    client: "pg",
+    connection: { 
         host: "localhost",
         user: "postgres",
         password: "admin",
@@ -15,52 +18,200 @@ const knex = require("knex")({ // require knex library
     }
 });
 
-// create variables
-let app = express(); // creates express object (stored in app variable)
-const port = 3000; // creates a variable to store port
+// CREATE VARIABLES: 
+let app = express(); // creates an express object called app
+const port = process.env.PORT || 3000; // Creates variable to store port. Uses .env variable "PORT". You can also just leave that out if aren't using .env
 
-// extra
-app.set("view engine", "ejs"); // allows us to use ejs
-app.use(express.urlencoded({extended:true})); // helps with html form outputs
+// PATHS: 
+app.set("view engine", "ejs"); // Allows you to use EJS for the web pages - requires a views folder and all files are .ejs
+app.use("/photos",express.static(path.join(__dirname, "photos"))); // allows you to create path for images (in folder titled "images")
+
+// MIDDLEWARE: (Middleware is code that runs between the time the request comes to the server and the time the response is sent back. It allows you to intercept and decide if the request should continue. It also allows you to parse the body request from the html form, handle errors, check authentication, etc.)
+app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a lot easier. Takes inputs and stores them in req.body (for post) or req.query (for get).
+
+    // SESSION MIDDLEWARE: (Needed for login functionality)
+        app.use( // allows you to use session variables?
+            session({
+                secret: process.env.SESSION_SECRET || 'fallback-secret-key', // only required parameter. Used to sign session cookies. Prevents tampering and session hijacking
+                resave: false, // true (default): save session on every request; false (reccomended): only save if modfied
+                saveUninitialized: false, // true (default): create session for every request; false (reccomended): only create when data is stored
+            })
+        );
+
+    // Content Security Policy middleware - allows localhost connections for development 
+        // This fixes the CSP violation error with Chrome DevTools (fixes chrome errors)
+        app.use((req, res, next) => { 
+            // Set a permissive CSP for development that allows localhost connections
+            // This allows Chrome DevTools to connect to localhost:3000
+            res.setHeader(
+            'Content-Security-Policy',
+            "default-src 'self' http://localhost:* ws://localhost:* wss://localhost:*; " +
+            "connect-src 'self' http://localhost:* ws://localhost:* wss://localhost:*; " +
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
+            "img-src 'self' data: https:; " +
+            "font-src 'self' https://cdn.jsdelivr.net;"
+            );
+            next();
+        });
+
+    // Global authentication middleware - runs on EVERY request (Needed for login functionality)
+        app.use((req, res, next) => {
+            // Skip authentication for login routes
+            if (req.path === '/' || req.path === '/login' || req.path === '/logout' || req.path === '/signUp') {
+                //continue with the request path
+                return next();
+            }
+        
+            // Check if user is logged in for all other routes
+            if (req.session.isLoggedIn) {
+                //notice no return because nothing below it
+                next(); // User is logged in, continue
+            } 
+            else {
+                res.render("login", { error_message: "Please log in to access this page" });
+            }
+        });
 
 // CREATE ROUTES:
-// Create route for home/root page 
-app.get("/", (req, res) => {
-    res.render("home");
-});
 
-// Create route for customer sign up page 
-app.get("/signUp", (req, res) => {
-    res.render("signUp")
-});
+// HOME PAGE
+    app.get("/", (req, res) => {
+        res.render("home");
+    });
 
-// Create route for employee login page 
-app.get("/login", (req, res) => {
-    res.render("login",{ error: null })
-});
+// SIGN UP PAGE
+    app.get("/signUp", (req, res) => {
+        res.render("signUp",{id: null, selectedLocation: null});
+    });
+    app.post("/signUp", (req, res) => {
+        knex("customers")
+            .insert(req.body)
+            .returning(["customer_id", "location"])  // return both fields
+            .then(([newCustomer]) => {    
+                res.render("signUp", { 
+                    id: newCustomer.customer_id,
+                    selectedLocation: newCustomer.location
+                });
+            })
+            .catch(err => {
+                console.error("Error during sign-up:", err);
+                res.status(500).send("Error creating new customer");
+            });
+    });
+    
 
-// Create route for database page 
-app.get("/database", async (req, res) => {
-    try {
-        const { table = "customers", search = "" } = req.query;
+// LOGIN PAGE
+    app.get("/login", (req, res) => { // route to display login page
+        res.render("login", { error_message: " " });
+    });
+    app.post("/login", (req, res) => { // route that occurs when login button is pressed
+        let sName = req.body.username;
+        let sPassword = req.body.password;
 
-        // get table data
-        let records = await knex(table).modify((qb) => {
-            if (search) qb.whereILike("name", `%${search}%`);
+        knex("employees") // fetch all session attributes
+            .select("employee_id", "username", "password", "level")
+            .where({ username: sName, password: sPassword })
+            .first()
+            .then((user) => {
+                if (user) { // if user is in list, then gather info
+                    req.session.isLoggedIn = true;
+                    req.session.username = user.username;
+                    req.session.userId = user.employee_id;
+                    req.session.userLevel = user.level;
+                    res.redirect("/database");
+                } else { // if not, display error
+                    res.render("login", { error_message: "Invalid login" });
+                }
+            })
+            .catch((err) => { // catch errors if needed
+                console.error("Login error:", err);
+                res.render("login", { error_message: "Invalid login" });
+            });
+    });
+
+// LOGOUT 
+    app.get("/logout", (req, res) => {
+        req.session.destroy((err) => {
+            if (err) {
+                console.log(err);
+            }
+            res.redirect("/");
+        });
+    });
+
+// DATABASE PAGE
+    app.get("/database", async (req, res) => {
+        try {
+            const { table = "customers", search = "" } = req.query;
+
+            // get table data
+            let records = await knex(table).modify((qb) => {
+                if (search) qb.whereILike("name", `%${search}%`);
+            });
+
+            res.render("database", {
+                currentTable: table,
+                records,
+                user: { role: req.session.userLevel },
+                searchTerm: search
+            });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Error fetching data from database");
+        }
+    });
+
+// SEARCHING USER
+    app.post("/search", (req, res) => { 
+        const searchInput = req.body.search;
+        const searchPattern = `%${searchInput}%`;
+        const table = req.body.table;
+        const col = req.body.col;
+
+        knex(table)
+            .whereRaw(`"${col}"::text ILIKE ?`, [searchPattern])
+            .then(searchTable => {
+            res.render("database", {
+                currentTable: table,
+                records: searchTable,
+                user: { role: req.session.userLevel },
+                searchTerm: searchInput
+            });
+            })
+            .catch(err => {
+            console.error("Error searching user", err);
+            res.status(500).json({ err });
+            });
         });
 
-        res.render("database", {
-            currentTable: table,
-            records,
-            user: { role: "admin" }, // temporarily mock admin user
-            searchTerm: search
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error fetching data from database");
-    }
-});
+// DELETING USER
+    app.post("/delete/:table/:id", async (req, res) => { 
+        const userId = req.params.id;
+        const table = req.params.table;
+        const search = "";
 
+        const primaryKeyByTable = {
+            customers: "customer_id",
+            employees: "employee_id",
+            orders: "order_id"
+        };
+        const primaryKey = primaryKeyByTable[table];
+
+        knex.select().from(table).where(primaryKey, userId).del().then(table => { 
+            res.redirect("/database"); 
+        });
+    });
+
+// ADD EMPLOYEE
+    app.get("/addEmp",(req,res) => { 
+        res.render("addEmp");
+    });
+    app.post('/addEmp', (req,res) => { // button that adds the user
+        knex("employees").insert(req.body).then(() => {
+            res.redirect("/database");
+        })
+    });
 // Tells server to start listening for user & display text in command line
 app.listen(port,() => console.log("the server has started to listen")); 
 
