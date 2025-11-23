@@ -7,9 +7,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Food Pantry Tracker - Landing Page</title>
+    <title>Utah Food Bank Tracker - Home</title>
+    <style>
+        /* Basic Styling */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                background-color: #e8f2f7;
+            }
+            
+            .title {
+                color: #2b7cb5;
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+                font-weight: 700;
+                text-align: center;
+            }
+
+            .subtitle {
+                color: #2b7cb5;
+                font-size: 1.3rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+
+            .text {
+                color: #666;
+                font-size: 0.95rem;
+            }
+
+        /* Header */
+            .header {
+                background: linear-gradient(135deg, #2b7cb5 0%, #4a9fd8 100%);
+                padding: 1rem 2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .logo a {
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: white;
+                text-decoration: none;
+            }
+
+            .nav {
+                display: flex;
+                gap: 2rem;
+            }
+
+            .nav a {
+                color: white;
+                text-decoration: none;
+                font-size: 1.1rem;
+                font-weight: 500;
+                transition: color 0.3s;
+            }
+
+            .nav a:hover {
+                color: #094067;
+            }
+
+        /* Welcome Section */
+            .welcome {
+                height: 500px;
+                background: #356f96;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 3rem 2rem;
+            }
+
+            .welcome-content {
+                background: white;
+                padding: 4rem 5rem;
+                border-radius: 12px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+                text-align: center;
+                max-width: 700px;
+            }
+
+            .welcome-title {
+                color: #2b7cb5;
+                font-size: 2.5rem;
+                margin-bottom: 2rem;
+                font-weight: 700;
+            }
+
+        /* User Selection */
+            .user-selection {
+                background: white;
+                padding: 5rem 3rem;
+                text-align: center;
+            }
+
+            .button-group {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .button {
+                padding: 2rem;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                text-decoration: none;
+                transition: all 0.3s;
+                background: white;
+                display: block;
+            }
+
+            .button:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 20px rgba(43, 124, 181, 0.3);
+                border-color: #2b7cb5;
+            }
+
+            .button-icon {
+                font-size: 3.5rem;
+                margin-bottom: 1rem;
+                display: block;
+            }
+
+        /* Locations */
+            .location {
+                max-width: 1200px; 
+                margin: 0 auto; 
+                padding: 5rem 2rem;
+            }
+
+            .locations-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+                margin-top: 2rem;
+            }
+
+            .location-card {
+                background: #f8f9fa;
+                padding: 2rem;
+                border-radius: 8px;
+                border-left: 4px solid #2b7cb5;
+            }
+
+            .location-details {
+                color: #555;
+                line-height: 1.8;
+            }
+
+            .location-details a {
+                color: #555;
+                text-decoration: underline;
+                transition: color 0.3s;
+                display: inline-block;
+                margin-bottom: 0.5rem;
+            }
+
+            .location-details a:hover {
+                color: #2b7cb5;
+                text-decoration: underline;
+            }
+
+            .location-details strong {
+                display: block;
+                color: #333;
+                margin-top: 0.75rem;
+            }
+
+        /* Responsive */
+            @media (max-width: 768px) {
+                .header {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .nav {
+                    gap: 1rem;
+                }
+
+                .welcome {
+                    height: auto;
+                    padding: 2rem 1rem;
+                }
+
+                .welcome-content {
+                    padding: 2.5rem 2rem;
+                }
+
+                .welcome-title {
+                    font-size: 2rem;
+                }
+
+                .user-selection {
+                    padding: 3rem 2rem;
+                }
+
+                .title {
+                    font-size: 1.5rem;
+                }
+
+                .button-group {
+                    grid-template-columns: 1fr;
+                }
+
+                .location {
+                    padding: 3rem 1.5rem;
+                }
+
+                .locations-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+    </style>
 </head>
 <body>
-    
+    <!-- Header -->
+    <header class="header">
+        <div class="logo"><a href="/">Utah Food Bank Tracker</a></div>
+        <nav class="nav">
+            <a href="/login">Employee Login</a>
+            <a href="/signUp">Customer Signup</a>
+        </nav>
+    </header>
+
+    <!-- Welcome -->
+    <section class="welcome">
+        <div class="welcome-content">
+            <h1 class="welcome-title">Welcome to the Utah Food Bank Tracker</h1>
+            <p>
+                We are dedicated to serving the Provo community by providing food and 
+                essential resources to individuals and families in need. Our goal is to 
+                foster hope, dignity, and opportunity for all who come through our doors.
+            </p>
+            <br>
+            <p>
+                The Community Food Pantry Tracker helps us manage donations, recipients, and 
+                donors more efficiently. This system allows us to reduce waste, track the needs 
+                of those we serve, and maintain strong connections with our generous donors.
+            </p>
+        </div>
+    </section>
+
+    <!-- User Selection -->
+    <section class="user-selection">
+        <h2 class="title">Get Started</h2>
+        <p class="text">Please select an option below to continue</p>
+        <br><br>
+        
+        <div class="button-group">
+            <a href="/login" class="button">
+                <span class="button-icon">👤</span>
+                <div class="subtitle">Employee Login</div>
+                <p class="text">Access the management system and database</p>
+            </a>
+            
+            <a href="/signUp" class="button">
+                <span class="button-icon">📝</span>
+                <div class="subtitle">Recipient Sign-up</div>
+                <p class="text">Register to receive food assistance</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Locations -->
+    <section class="location">
+        <h2 class="title">Our Locations</h2>
+        <div class="locations-grid">
+            <div class="location-card">
+                <h3 class="subtitle">Salt Lake Food Bank</h3>
+                <div class="location-details">
+                    <a href="https://maps.app.goo.gl/mPFJJs6xbKMm58VSA" target="_blank">
+                        3150 S 900 W<br>
+                        South Salt Lake, UT 84119
+                    </a>
+                    <strong>Phone:</strong> (801) 978-2452
+                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+                </div>
+            </div>
+            <div class="location-card">
+                <h3 class="subtitle">St. George Food Bank</h3>
+                <div class="location-details">
+                    <a href="https://maps.app.goo.gl/zCjHaV9Ur62bMWnV8" target="_blank">
+                        4416 River Rd<br>
+                        St. George, UT 84790
+                    </a>
+                    <strong>Phone:</strong> (435) 656-9122
+                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+                </div>
+            </div>
+            <div class="location-card">
+                <h3 class="subtitle">Springville Food Bank</h3>
+                <div class="location-details">
+                    <a href="https://maps.app.goo.gl/BZXP51WZ9tuK6zpY8" target="_blank">
+                        1900 W 900 S<br>
+                        Springville, UT 84663
+                    </a>
+                    <strong>Phone:</strong> (801) 887-1277
+                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+                </div>
+            </div>
+            <div class="location-card">
+                <h3 class="subtitle">Blanding Food Bank</h3>
+                <div class="location-details">
+                    <a href="https://maps.app.goo.gl/2v7iTwSdZHuvtKJ98" target="_blank">
+                        295 E 200 N<br>
+                        Blanding, UT 84511
+                    </a>
+                    <strong>Phone:</strong> (435) 674-5498
+                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
