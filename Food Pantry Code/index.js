@@ -1,7 +1,7 @@
 // Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington
 // This code will help owners of food pantrys manage customers, emplolyees and orders.
 
-// REQUIRE LIBRARIES AND STORE IN VARIABLE (if applicable): 
+// REQUIRE LIBRARIES AND STORE IN VARIABLES:
 require('dotenv').config(); // DOTENV: loads ENVIROMENT VARIABLES from .env file; Allows you to use process.env
 const express = require("express"); // EXPRESS: helps with web development 
 const session = require("express-session"); // EXPRESS SESSION: needed for session variable. Stored on the server to hold data; Essentially adds a new property to every req object that allows you to store a value per session.
@@ -27,23 +27,20 @@ const port = process.env.PORT || 3000; // Creates variable to store port. Uses .
 app.set("view engine", "ejs"); // Allows you to use EJS for the web pages - requires a views folder and all files are .ejs
 app.use("/photos",express.static(path.join(__dirname, "photos"))); // allows you to create path for images (in folder titled "images")
 
-// MIDDLEWARE: (Middleware is code that runs between the time the request comes to the server and the time the response is sent back. It allows you to intercept and decide if the request should continue. It also allows you to parse the body request from the html form, handle errors, check authentication, etc.)
+// MIDDLEWARE: 
 app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a lot easier. Takes inputs and stores them in req.body (for post) or req.query (for get).
 
     // SESSION MIDDLEWARE: (Needed for login functionality)
-        app.use( // allows you to use session variables?
+        app.use( // allows you to use session variables
             session({
-                secret: process.env.SESSION_SECRET || 'fallback-secret-key', // only required parameter. Used to sign session cookies. Prevents tampering and session hijacking
-                resave: false, // true (default): save session on every request; false (reccomended): only save if modfied
-                saveUninitialized: false, // true (default): create session for every request; false (reccomended): only create when data is stored
+                secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+                resave: false, 
+                saveUninitialized: false, 
             })
         );
 
     // Content Security Policy middleware - allows localhost connections for development 
-        // This fixes the CSP violation error with Chrome DevTools (fixes chrome errors)
         app.use((req, res, next) => { 
-            // Set a permissive CSP for development that allows localhost connections
-            // This allows Chrome DevTools to connect to localhost:3000
             res.setHeader(
             'Content-Security-Policy',
             "default-src 'self' http://localhost:* ws://localhost:* wss://localhost:*; " +
@@ -58,7 +55,7 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
 
     // Global authentication middleware - runs on EVERY request (Needed for login functionality)
         app.use((req, res, next) => {
-            // Skip authentication for login routes
+            // Skip authentication for specific login routes
             if (req.path === '/' || req.path === '/login' || req.path === '/logout' || req.path === '/signUp') {
                 //continue with the request path
                 return next();
@@ -66,7 +63,6 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
         
             // Check if user is logged in for all other routes
             if (req.session.isLoggedIn) {
-                //notice no return because nothing below it
                 next(); // User is logged in, continue
             } 
             else {
@@ -82,13 +78,13 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
     });
 
 // SIGN UP PAGE
-    app.get("/signUp", (req, res) => {
+    app.get("/signUp", (req, res) => { // Route for initially displaying sign-up page
         res.render("signUp",{id: null, selectedLocation: null});
     });
-    app.post("/signUp", (req, res) => {
+    app.post("/signUp", (req, res) => { // Route that occurs when sign-up button is pressed
         knex("customers")
             .insert(req.body)
-            .returning(["customer_id", "location"])  // return both fields
+            .returning(["customer_id", "location"])
             .then(([newCustomer]) => {    
                 res.render("signUp", { 
                     id: newCustomer.customer_id,
@@ -110,7 +106,7 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
         let sName = req.body.username;
         let sPassword = req.body.password;
 
-        knex("employees") // fetch all session attributes
+        knex("employees") 
             .select("employee_id", "username", "password", "level")
             .where({ username: sName, password: sPassword })
             .first()
@@ -132,7 +128,7 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
     });
 
 // LOGOUT 
-    app.get("/logout", (req, res) => {
+    app.get("/logout", (req, res) => { // Route that logs user out
         req.session.destroy((err) => {
             if (err) {
                 console.log(err);
@@ -142,7 +138,7 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
     });
 
 // DATABASE PAGE
-    app.get("/database", async (req, res) => {
+    app.get("/database", async (req, res) => { // route to display database page
         try {
             const { table = "customers", search = "" } = req.query;
 
@@ -165,7 +161,7 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
     });
 
 // SEARCHING USER
-    app.post("/search", (req, res) => { 
+    app.post("/search", (req, res) => { // route that occurs when search button is pressed
         const searchInput = req.body.search;
         const searchPattern = `%${searchInput}%`;
         const table = req.body.table;
@@ -174,13 +170,13 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
         knex(table)
             .whereRaw(`"${col}"::text ILIKE ?`, [searchPattern])
             .then(searchTable => {
-            res.render("database", {
-                currentTable: table,
-                records: searchTable,
-                user: { role: req.session.userLevel },
-                error_message: "",
-                searchTerm: searchInput
-            });
+                res.render("database", {
+                    currentTable: table,
+                    records: searchTable,
+                    user: { role: req.session.userLevel },
+                    error_message: "",
+                    searchTerm: searchInput
+                });
             })
             .catch(err => {
             console.error("Error searching user", err);
@@ -189,32 +185,31 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
         });
 
 // DELETING USER
-app.post("/delete/:table/:id", async (req, res) => {
-    const { table, id } = req.params;
+    app.post("/delete/:table/:id", async (req, res) => { // route that occurs when delete button is pressed
+        const { table, id } = req.params;
 
-    const primaryKeyByTable = {
-        customers: "customer_id",
-        employees: "employee_id",
-        orders: "order_id"
-    };
+        const primaryKeyByTable = {
+            customers: "customer_id",
+            employees: "employee_id",
+            orders: "order_id"
+        };
+        const primaryKey = primaryKeyByTable[table]; // gather the primary key based on table
 
-    const primaryKey = primaryKeyByTable[table];
-
-    try {
-        await knex(table).where(primaryKey, id).del();
-        res.status(200).json({ success: true });
-    } catch (err) {
-        console.log("Error deleting record:", err.message);
-        res.status(500).json({ error: err.message });
-    }
+        try {
+            await knex(table).where(primaryKey, id).del();
+            res.status(200).json({ success: true });
+        } catch (err) {
+            console.log("Error deleting record:", err.message);
+            res.status(500).json({ error: err.message });
+        }
     });
 
 
 // ADD USER
-    app.get("/add/:table",(req,res) => { 
+    app.get("/add/:table",(req,res) => { // route to display add user page
         res.render("add", { table: req.params.table, error_message: ""  });
     });
-    app.post('/add/:table', (req,res) => { // button that adds the user
+    app.post('/add/:table', (req,res) => { // route that occurs when add button is pressed (on add page)
         const table = req.params.table;
     
         const primaryKeyByTable = {
@@ -239,63 +234,53 @@ app.post("/delete/:table/:id", async (req, res) => {
     });
 
 // EDIT USER
-app.get("/edit/:table/:id", async (req, res) => { 
-    const userId = req.params.id;
-    const table = req.params.table;
+    app.get("/edit/:table/:id", async (req, res) => { // route that gathers user info and passes it along to user page
+        const userId = req.params.id;
+        const table = req.params.table;
 
-    const primaryKeyByTable = {
-        customers: "customer_id",
-        employees: "employee_id",
-        orders: "order_id"
-    };
-    const primaryKey = primaryKeyByTable[table];
+        const primaryKeyByTable = {
+            customers: "customer_id",
+            employees: "employee_id",
+            orders: "order_id"
+        };
+        const primaryKey = primaryKeyByTable[table];
 
-    knex.select().from(table).where(primaryKey, userId).first().then((user) => {
-        if (!user) {
-            return res.status(404).render("database", {
-                currentTable: table,
-                records: searchTable,
-                user: { role: req.session.userLevel },
-                error_message: "Could not find user to edit.",
-                searchTerm: searchInput
+        knex.select().from(table).where(primaryKey, userId).first().then((user) => {
+            res.render("edit", { table: table, user, error_message: "", id: userId  });
+        }).catch((err) => {
+            console.error("Error fetching user:", err.message);
+            res.status(500).render("displayUsers", {
+                users: [],
+                error_message: "Unable to load user for editing."
             });
-        }
-        res.render("edit", { table: table, user, error_message: "", id: userId  });
-    })
-    .catch((err) => {
-        console.error("Error fetching user:", err.message);
-        res.status(500).render("displayUsers", {
-            users: [],
-            error_message: "Unable to load user for editing."
         });
     });
-});
-app.post("/edit/:table/:id", (req, res) => {
-    const table = req.params.table;
-    const userId = req.params.id;
+    app.post("/edit/:table/:id", (req, res) => { // route that occurs when save button is pressed (on edit page)
+        const table = req.params.table;
+        const userId = req.params.id;
 
-    const primaryKeyByTable = {
-        customers: "customer_id",
-        employees: "employee_id",
-        orders: "order_id"
-    };
+        const primaryKeyByTable = {
+            customers: "customer_id",
+            employees: "employee_id",
+            orders: "order_id"
+        };
 
-    const primaryKey = primaryKeyByTable[table];
+        const primaryKey = primaryKeyByTable[table];
 
-    const updateData = req.body;  // form inputs must match column names
+        const updateData = req.body;  // form inputs must match column names
 
-    knex(table)
-        .where(primaryKey, userId)
-        .update(updateData)
-        .then(() => {
-            res.redirect(`/database?table=${table}`);
-        })
-        .catch(err => {
-            console.log("Error updating record:", err.message);
-            res.status(500).json({ error: err.message });
-        });
-});
+        knex(table)
+            .where(primaryKey, userId)
+            .update(updateData)
+            .then(() => {
+                res.redirect(`/database?table=${table}`);
+            })
+            .catch(err => {
+                console.log("Error updating record:", err.message);
+                res.status(500).json({ error: err.message });
+            });
+    });
 
-// Tells server to start listening for user & display text in command line
+// LISTENING PORT
 app.listen(port,() => console.log("the server has started to listen")); 
 

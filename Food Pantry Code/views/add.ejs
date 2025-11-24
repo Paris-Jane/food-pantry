@@ -1,19 +1,12 @@
 <!--Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington-->
-<!--This page will display the databases-->
-<!--It will display a customer info, employee info and order page.-->
-<!--It will allow user to do CRUD capabilities depending on permissions-->
-
-<!--Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington-->
-<!--This page will display the databases-->
-<!--It will display a customer info, employee info and order page.-->
-<!--It will allow user to do CRUD capabilities depending on permissions-->
+<!--This page will allow Managers to add customers, employees, orders-->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Utah Food Bank Tracker - Edit</title>
+    <title>Utah Food Bank Tracker - Add</title>
     <style>
         * {
             margin: 0;
@@ -194,14 +187,12 @@
     <!-- Main Content -->
     <div class="container">
         <div class="add-card">
+            <!-- Add-Employee Form -->
             <%if (table === "employees"){%>
-                <!-- Add-Employee Form -->
                 <form id="addForm" class="add-form" method="POST" action="/add/employees">
                     <br><br>
                     <h1 class="title">Add Employee</h1>
-                    <p class="text" style="text-align: center;">
-                        Please add any neccesary information for this employee.
-                    </p>
+                    <p class="text" style="text-align: center;">Please add any neccesary information for this employee.</p>
                 
                     <div class="form-group">
                         <label class="form-label">First Name <span class="required">*</span></label>
@@ -236,6 +227,7 @@
                     <a href="/database" class="back-btn">Back to Database</a>
                 </form>
                 </div>
+            <!-- Add-Customer Form -->
             <%} else if (table === "customers"){%>
                 <form id="signupForm" class="signup-form" action="/add/customers" method="POST">
                     <br><br>
@@ -258,24 +250,25 @@
                     </div>
 
                     <div class="form-group">
-                            <label class="form-label">Email <span class="required">*</span></label>
+                        <label class="form-label">Email <span class="required">*</span></label>
                         <input type="email" class="form-input" name="email" placeholder="example@google.com" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Location <span class="required">*</span></label>
                         <select class="form-select" name="location" required>
-                            <option value="">Select a location</option>
-                            <option value="blanding">Blanding</option>
-                            <option value="salt-lake" >Salt Lake</option>
-                            <option value="st-george" >St. George</option>
-                            <option value="springville" >Springville</option>
+                            <option value=""> Select a location </option>
+                            <option value="blanding"> Blanding </option>
+                            <option value="salt-lake" > Salt Lake </option>
+                            <option value="st-george" > St. George </option>
+                            <option value="springville" > Springville </option>
                         </select>
                     </div>
 
                     <button type="submit" class="submit-btn">Add Customer</button>
                     <a href="/database" class="back-btn">Back to Database</a>
                 </form>
+            <!-- Add-Order Form -->
             <%} else { %>
                 <form id="signupForm" class="signup-form" action="/add/orders" method="POST">
                     <br><br>
@@ -304,7 +297,6 @@
 
                     <button type="submit" class="submit-btn">Add Order</button>
                     <a href="/database" class="back-btn">Back to Database</a>
-
                 </form>
             <%}%>
         </div>

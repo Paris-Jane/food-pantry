@@ -189,14 +189,12 @@
     <!-- Main Content -->
     <div class="container">
         <div class="add-card">
+            <!-- Add-Employee Form -->
             <%if (table === "employees"){%>
-                <!-- Add-Employee Form -->
                 <form id="addForm" class="add-form" method="POST" action="/edit/employees/<%= user.employee_id %>">
                     <br><br>
                     <h1 class="title">Edit Employee</h1>
-                    <p class="text" style="text-align: center;">
-                        Please update any neccesary information for this employee.
-                    </p>
+                    <p class="text" style="text-align: center;">Please update any neccesary information for this employee.</p>
                 
                     <div class="form-group">
                         <label class="form-label">First Name <span class="required">*</span></label>
@@ -212,14 +210,8 @@
                         <label class="form-label">Level <span class="required">*</span></label>
                         <select class="form-select" name="level" required>
                             <option value="">Select a level</option>
-                        
-                            <option value="Manager" <%= user.level === 'Manager' ? 'selected' : '' %>>
-                                Manager
-                            </option>
-                        
-                            <option value="Employee" <%= user.level === 'Employee' ? 'selected' : '' %>>
-                                Employee
-                            </option>
+                            <option value="Manager" <%= user.level === 'Manager' ? 'selected' : '' %>>Manager</option>
+                            <option value="Employee" <%= user.level === 'Employee' ? 'selected' : '' %>>Employee</option>
                         </select>                        
                     </div>
 
@@ -237,6 +229,7 @@
                     <a href="/database" class="back-btn">Back to Database</a>
                 </form>
                 </div>
+            <!-- Add-Customer Form -->
             <%} else if (table === "customers"){%>
                 <form id="signupForm" class="signup-form" action="/edit/customers/<%= user.customer_id %>" method="POST">
                     <br><br>
@@ -259,7 +252,7 @@
                     </div>
 
                     <div class="form-group">
-                            <label class="form-label">Email <span class="required">*</span></label>
+                        <label class="form-label">Email <span class="required">*</span></label>
                         <input type="email" class="form-input" name="email" value="<%= user.email %>" required>
                     </div>
 
@@ -267,28 +260,17 @@
                         <label class="form-label">Location <span class="required">*</span></label>
                         <select class="form-select" name="location" required>
                             <option value="">Select a location</option>
-                            <option value="blanding" 
-                                <%= user.location === 'blanding' ? 'selected' : '' %>>
-                                Blanding
-                            </option>
-                            <option value="salt-lake" 
-                                <%= user.location === 'salt-lake' ? 'selected' : '' %>>
-                                Salt Lake
-                            </option>
-                            <option value="st-george" 
-                                <%= user.location === 'st-george' ? 'selected' : '' %>>
-                                St. George
-                            </option>
-                            <option value="springville" 
-                                <%= user.location === 'springville' ? 'selected' : '' %>>
-                                Springville
-                            </option>
+                            <option value="blanding" <%= user.location === 'blanding' ? 'selected' : '' %>>Blanding</option>
+                            <option value="salt-lake" <%= user.location === 'salt-lake' ? 'selected' : '' %>> Salt Lake</option>
+                            <option value="st-george" <%= user.location === 'st-george' ? 'selected' : '' %>>St. George</option>
+                            <option value="springville" <%= user.location === 'springville' ? 'selected' : '' %>>Springville</option>
                         </select>
                     </div>
 
                     <button type="submit" class="submit-btn">Update Customer</button>
                     <a href="/database" class="back-btn">Back to Database</a>
                 </form>
+            <!-- Add-Order Form -->
             <%} else { %>
                 <form id="signupForm" class="signup-form" action="/edit/orders/<%= user.order_id %>" method="POST">
                     <br><br>

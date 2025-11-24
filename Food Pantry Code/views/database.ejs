@@ -544,12 +544,6 @@
     <header class="header">
         <div class="logo"><a href="/">Utah Food Bank Tracker</a></div>
         <nav class="nav">
-<<<<<<< Updated upstream
-=======
-            <% if (user && user.role === 'Manager') { %>
-            <a href="/addEmp">Add Employee</a>
-            <% } %>
->>>>>>> Stashed changes
             <a href="/logout">Logout</a>
         </nav>
     </header>
@@ -573,13 +567,15 @@
             <% }) %>
         </div>
 
-        <!-- Search Bar -->
+        <!-- Search/Add Bar -->
         <form class="search-bar" method="POST" action="/search">
             <input type="hidden" name="table" value="<%= currentTable %>">
             
+            <!-- Search Bar -->
             <div class="search-group">
                 <input type="text" name="search" placeholder="Search <%= currentTable %>..." value="<%= searchTerm || '' %>">
                 <select name="col" id="search-options">
+                    <!--Dynamically goes through and creates a dropdown with column names-->
                     <% if (records.length > 0) { %>
                         <% Object.keys(records[0]).forEach(column => { %>
                             <option value="<%= column %>"><%= column %></option>
@@ -588,16 +584,18 @@
                 </select>
             </div>
 
+            <!--Buttons-->
             <div class="action-buttons">
                 <button type="submit">Search</button>
+                <!--If "Manager", show add button-->
                 <% if (user && user.role === 'Manager') { %>
                     <a href="/add/<%=currentTable%>" class="btn-add">Add New</a>
                 <% } %>
             </div>
         </form>
 
+        <!--Edit/Delete buttons (show when clicked, and only if manager)-->
         <% if (user && user.role === 'Manager') { %>
-        <!-- Bulk actions (shown only when checkboxes selected) -->
         <div class="bulk-actions" id="bulk-actions">
             <span id="selected-count">0 selected</span>
             <div class="bulk-actions-buttons">
@@ -610,33 +608,31 @@
         <!-- Table -->
         <div class="table-container">
             <table>
-                <thead>
-                    <tr>
-                        <% if (records.length > 0) { %>
-                            <% if (user && user.role === 'Manager') { %>
-                                <th class="select-cell">
-                                    <!-- Select all checkbox -->
-                                    <input type="checkbox" id="select-all">
-                                </th>
-                            <% } %>
-                            <% Object.keys(records[0]).forEach(key => { %>
-                                <th><%= key %></th>
-                            <% }) %>
-                        <% } else { %>
-                            <th>No records found</th>
+                <thead><tr>
+                    <% if (records.length > 0) { %>
+                        <% if (user && user.role === 'Manager') { %>
+                            <th class="select-cell">
+                                <!-- Select all checkbox option-->
+                                <input type="checkbox" id="select-all">
+                            </th>
                         <% } %>
-                    </tr>
-                </thead>
+                        <% Object.keys(records[0]).forEach(key => { %>
+                            <th><%= key %></th>
+                        <% }) %>
+                    <% } else { %>
+                        <th>No records found</th>
+                    <% } %>
+                </tr></thead>
 
                 <tbody>
                     <!--Figure out which "id" column you will need to pass along-->
                     <% let idColumn;
                         if (currentTable === 'employees') {
-                        idColumn = 'employee_id';
+                            idColumn = 'employee_id';
                         } else if (currentTable === 'orders') {
-                        idColumn = 'order_id';
+                            idColumn = 'order_id';
                         } else {
-                        idColumn = 'customer_id';
+                            idColumn = 'customer_id';
                         }%>
 
                     <% if (records.length > 0) { %>
@@ -645,8 +641,8 @@
                                 <% if (user && user.role === 'Manager') { %>
                                     <td class="select-cell">
                                         <input type="checkbox"
-                                              class="row-select"
-                                              value="<%= record[idColumn] %>">
+                                            class="row-select"
+                                            value="<%= record[idColumn] %>">
                                     </td>
                                 <% } %>
 
@@ -667,6 +663,7 @@
         </div>
     </div>
 
+    <!-- Pop up box for Deleting (managers only)-->
     <% if (user && user.role === 'Manager') { %>
     <!-- Delete confirmation popup INSIDE the page -->
     <div class="modal-overlay" id="delete-modal">
