@@ -544,6 +544,12 @@
     <header class="header">
         <div class="logo"><a href="/">Utah Food Bank Tracker</a></div>
         <nav class="nav">
+<<<<<<< Updated upstream
+=======
+            <% if (user && user.role === 'Manager') { %>
+            <a href="/addEmp">Add Employee</a>
+            <% } %>
+>>>>>>> Stashed changes
             <a href="/logout">Logout</a>
         </nav>
     </header>
@@ -625,13 +631,13 @@
                 <tbody>
                     <!--Figure out which "id" column you will need to pass along-->
                     <% let idColumn;
-                      if (currentTable === 'employees') {
+                        if (currentTable === 'employees') {
                         idColumn = 'employee_id';
-                      } else if (currentTable === 'orders') {
+                        } else if (currentTable === 'orders') {
                         idColumn = 'order_id';
-                      } else {
+                        } else {
                         idColumn = 'customer_id';
-                      }%>
+                        }%>
 
                     <% if (records.length > 0) { %>
                         <% records.forEach(record => { %>
