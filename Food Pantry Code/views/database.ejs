@@ -137,20 +137,30 @@
             gap: 1rem;
             border-bottom: 1px solid #e0e0e0;
             align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+            min-width: 300px;
         }
 
         .search-bar input[type="text"] {
             flex: 1;
-            padding: 0.75rem;
+            padding: 0.75rem 1rem;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 0.95rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            min-width: 200px;
         }
 
         .search-bar input[type="text"]:focus {
             outline: none;
             border-color: #2b7cb5;
+            box-shadow: 0 0 0 3px rgba(43, 124, 181, 0.1);
         }
 
         .search-bar select {
@@ -161,7 +171,7 @@
             background: white;
             color: #333;
             cursor: pointer;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
             min-width: 150px;
             text-transform: capitalize;
         }
@@ -169,22 +179,111 @@
         .search-bar select:focus {
             outline: none;
             border-color: #2b7cb5;
+            box-shadow: 0 0 0 3px rgba(43, 124, 181, 0.1);
         }
 
-        .search-bar button {
-            padding: 0.75rem 2rem;
-            background: #2b7cb5;
-            color: white;
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-left: auto;
+        }
+
+        .search-bar button,
+        .btn-add {
+            padding: 0.75rem 1.75rem;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             white-space: nowrap;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-bar button {
+            background: #2b7cb5;
+            color: white;
         }
 
         .search-bar button:hover {
             background: #236399;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(43, 124, 181, 0.3);
+        }
+
+        .btn-add {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-add:hover {
+            background: #229954;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-add::before {
+            content: '+';
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Bulk actions bar */
+        .bulk-actions {
+            display: none; /* shown via JS */
+            justify-content: space-between;
+            gap: 0.75rem;
+            background: #f8f9fa;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+        }
+
+        .bulk-actions span {
+            font-size: 0.95rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .bulk-actions-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .bulk-actions button {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .bulk-edit {
+            background: #2b7cb5;
+            color: white;
+        }
+
+        .bulk-edit:hover {
+            background: #236399;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(43, 124, 181, 0.3);
+        }
+
+        .bulk-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .bulk-delete:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
         }
 
         /* Table Container */
@@ -219,6 +318,10 @@
             color: #555;
         }
 
+        tbody tr {
+            transition: all 0.2s;
+        }
+
         tbody tr:hover {
             background: #f8f9fa;
         }
@@ -227,42 +330,26 @@
             border-bottom: none;
         }
 
-        /* Actions Column */
-        .actions {
-            display: flex;
-            gap: 0.5rem;
+        /* Checkbox column */
+        .select-cell {
+            width: 50px;
+            text-align: center;
         }
 
-        .actions form {
-            margin: 0;
-        }
-
-        .actions button {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
+        .select-cell input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
+            accent-color: #2b7cb5;
         }
 
-        .actions button[type="submit"]:first-child {
-            background: #2b7cb5;
-            color: white;
+        /* Light grey highlight for selected rows */
+        tbody tr.row-selected {
+            background: #e3f2fd;
         }
 
-        .actions button[type="submit"]:first-child:hover {
-            background: #236399;
-        }
-
-        .actions button[type="submit"]:last-child {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .actions button[type="submit"]:last-child:hover {
-            background: #c0392b;
+        tbody tr.row-selected:hover {
+            background: #bbdefb;
         }
 
         /* No Records Message */
@@ -273,7 +360,117 @@
             font-size: 1.1rem;
         }
 
+        /* --- POPUP (MODAL) STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none; /* shown via JS */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal h2 {
+            margin-bottom: 0.75rem;
+            color: #e74c3c;
+            font-size: 1.4rem;
+        }
+
+        .modal p {
+            margin-bottom: 1.75rem;
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .modal-btn-cancel,
+        .modal-btn-confirm {
+            padding: 0.65rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-cancel {
+            background: #f5f5f5;
+            color: #555;
+            border: 1px solid #ddd;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #e8e8e8;
+        }
+
+        .modal-btn-confirm {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .modal-btn-confirm:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
         /* Responsive */
+        @media (max-width: 968px) {
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-group {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .action-buttons {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .action-buttons button,
+            .action-buttons a {
+                flex: 1;
+            }
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -286,6 +483,7 @@
 
             .container {
                 padding: 0 1rem;
+                margin: 1rem auto;
             }
 
             .title {
@@ -300,15 +498,6 @@
                 padding: 0.75rem 1rem;
             }
 
-            .search-bar {
-                flex-direction: column;
-            }
-
-            .search-bar select {
-                width: 100%;
-                min-width: auto;
-            }
-
             table {
                 font-size: 0.85rem;
             }
@@ -317,11 +506,34 @@
                 padding: 0.75rem 0.5rem;
             }
 
-            .actions {
+            .bulk-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .bulk-actions span {
+                margin-bottom: 0.75rem;
+            }
+
+            .bulk-actions-buttons {
                 flex-direction: column;
             }
 
-            .actions button {
+            .bulk-actions button {
+                width: 100%;
+            }
+
+            .modal {
+                padding: 1.5rem;
+                max-width: 95%;
+            }
+
+            .modal-actions {
+                flex-direction: column-reverse;
+            }
+
+            .modal-btn-cancel,
+            .modal-btn-confirm {
                 width: 100%;
             }
         }
@@ -332,9 +544,6 @@
     <header class="header">
         <div class="logo"><a href="/">Utah Food Bank Tracker</a></div>
         <nav class="nav">
-            <% if (user && user.role === 'Manager') { %>
-              <a href="/addEmp">Add Employee</a>
-            <% } %>
             <a href="/logout">Logout</a>
         </nav>
     </header>
@@ -344,6 +553,7 @@
         <div class="page-header">
             <h1 class="title">Database Management</h1>
             <p class="page-subtitle">View and manage customer, employee, and order information</p>
+            <p><%=error_message%></p>
         </div>
 
         <!-- Tabs -->
@@ -360,16 +570,36 @@
         <!-- Search Bar -->
         <form class="search-bar" method="POST" action="/search">
             <input type="hidden" name="table" value="<%= currentTable %>">
-            <input type="text" name="search" placeholder="Search <%= currentTable %>..." value="<%= searchTerm || '' %>">
-            <select name="col" id="search-options">
-                <% if (records.length > 0) { %>
-                    <% Object.keys(records[0]).forEach(column => { %>
-                        <option value="<%= column %>"><%= column %></option>
-                    <% }) %>
+            
+            <div class="search-group">
+                <input type="text" name="search" placeholder="Search <%= currentTable %>..." value="<%= searchTerm || '' %>">
+                <select name="col" id="search-options">
+                    <% if (records.length > 0) { %>
+                        <% Object.keys(records[0]).forEach(column => { %>
+                            <option value="<%= column %>"><%= column %></option>
+                        <% }) %>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit">Search</button>
+                <% if (user && user.role === 'Manager') { %>
+                    <a href="/add/<%=currentTable%>" class="btn-add">Add New</a>
                 <% } %>
-            </select>
-            <button type="submit">Search</button>
+            </div>
         </form>
+
+        <% if (user && user.role === 'Manager') { %>
+        <!-- Bulk actions (shown only when checkboxes selected) -->
+        <div class="bulk-actions" id="bulk-actions">
+            <span id="selected-count">0 selected</span>
+            <div class="bulk-actions-buttons">
+                <button type="button" class="bulk-edit" id="bulk-edit-btn">Edit Selected</button>
+                <button type="button" class="bulk-delete" id="bulk-delete-btn">Delete Selected</button>
+            </div>
+        </div>
+        <% } %>
 
         <!-- Table -->
         <div class="table-container">
@@ -377,12 +607,15 @@
                 <thead>
                     <tr>
                         <% if (records.length > 0) { %>
+                            <% if (user && user.role === 'Manager') { %>
+                                <th class="select-cell">
+                                    <!-- Select all checkbox -->
+                                    <input type="checkbox" id="select-all">
+                                </th>
+                            <% } %>
                             <% Object.keys(records[0]).forEach(key => { %>
                                 <th><%= key %></th>
                             <% }) %>
-                            <% if (user && user.role === 'Manager') { %>
-                                <th>Actions</th>
-                            <% } %>
                         <% } else { %>
                             <th>No records found</th>
                         <% } %>
@@ -403,19 +636,17 @@
                     <% if (records.length > 0) { %>
                         <% records.forEach(record => { %>
                             <tr>
+                                <% if (user && user.role === 'Manager') { %>
+                                    <td class="select-cell">
+                                        <input type="checkbox"
+                                              class="row-select"
+                                              value="<%= record[idColumn] %>">
+                                    </td>
+                                <% } %>
+
                                 <% Object.values(record).forEach(value => { %>
                                     <td><%= value %></td>
                                 <% }) %>
-                                <% if (user && user.role === 'Manager') { %>
-                                    <td class="actions">
-                                        <form method="GET" action="/edit/<%= currentTable %>/<%= record[idColumn] %>">
-                                            <button type="submit">Edit</button>
-                                        </form>
-                                        <form method="POST" action="/delete/<%= currentTable %>/<%= record[idColumn] %>">
-                                            <button type="submit">Delete</button>
-                                        </form>
-                                    </td>
-                                <% } %>
                             </tr>
                         <% }) %>
                     <% } else { %>
@@ -429,5 +660,185 @@
             </table>
         </div>
     </div>
+
+    <% if (user && user.role === 'Manager') { %>
+    <!-- Delete confirmation popup INSIDE the page -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal">
+            <h2>Confirm Delete</h2>
+            <p id="delete-modal-text">
+                Are you sure you would like to delete the selected user(s)?
+            </p>
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" id="modal-cancel-btn">Cancel</button>
+                <button type="button" class="modal-btn-confirm" id="modal-confirm-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const tableName = "<%= currentTable %>";
+            const bulkBar = document.getElementById("bulk-actions");
+            const editBtn = document.getElementById("bulk-edit-btn");
+            const deleteBtn = document.getElementById("bulk-delete-btn");
+            const selectedCountSpan = document.getElementById("selected-count");
+            const checkboxes = document.querySelectorAll(".row-select");
+            const selectAll = document.getElementById("select-all");
+
+            // Modal elements
+            const modalOverlay = document.getElementById("delete-modal");
+            const modalText = document.getElementById("delete-modal-text");
+            const modalCancel = document.getElementById("modal-cancel-btn");
+            const modalConfirm = document.getElementById("modal-confirm-btn");
+
+            let pendingDeleteIds = [];
+
+            function getSelectedIds() {
+                return Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+            }
+
+            function toggleRowSelected(checkbox) {
+                const row = checkbox.closest("tr");
+                if (!row) return;
+                if (checkbox.checked) {
+                    row.classList.add("row-selected");
+                } else {
+                    row.classList.remove("row-selected");
+                }
+            }
+
+            function updateSelectAllState() {
+                if (!selectAll) return;
+                const total = checkboxes.length;
+                const selected = getSelectedIds().length;
+
+                if (selected === 0) {
+                    selectAll.checked = false;
+                    selectAll.indeterminate = false;
+                } else if (selected === total) {
+                    selectAll.checked = true;
+                    selectAll.indeterminate = false;
+                } else {
+                    selectAll.checked = false;
+                    selectAll.indeterminate = true;
+                }
+            }
+
+            function updateBulkUI() {
+                const ids = getSelectedIds();
+                const count = ids.length;
+
+                if (count === 0) {
+                    bulkBar.style.display = "none";
+                } else {
+                    bulkBar.style.display = "flex";
+                    selectedCountSpan.textContent = count + " selected";
+                }
+
+                if (count === 1) {
+                    editBtn.style.display = "inline-block";
+                } else {
+                    editBtn.style.display = "none";
+                }
+
+                updateSelectAllState();
+            }
+
+            // Individual checkbox changes
+            checkboxes.forEach(cb => {
+                cb.addEventListener("change", function () {
+                    toggleRowSelected(this);
+                    updateBulkUI();
+                });
+            });
+
+            // Select all checkbox
+            if (selectAll) {
+                selectAll.addEventListener("change", function () {
+                    const checked = this.checked;
+                    checkboxes.forEach(cb => {
+                        cb.checked = checked;
+                        toggleRowSelected(cb);
+                    });
+                    updateBulkUI();
+                });
+            }
+
+            if (editBtn) {
+                editBtn.addEventListener("click", function () {
+                    const ids = getSelectedIds();
+                    if (ids.length !== 1) return;
+                    const id = encodeURIComponent(ids[0]);
+                    window.location.href = `/edit/${tableName}/${id}`;
+                });
+            }
+
+            if (deleteBtn) {
+                deleteBtn.addEventListener("click", function () {
+                    const ids = getSelectedIds();
+                    if (ids.length === 0) return;
+
+                    pendingDeleteIds = ids;
+
+                    // Update modal message with count
+                    if (ids.length === 1) {
+                        modalText.textContent = "Are you sure you would like to delete this record? This action cannot be undone.";
+                    } else {
+                        modalText.textContent = `Are you sure you would like to delete these ${ids.length} records? This action cannot be undone.`;
+                    }
+
+                    // Show popup
+                    modalOverlay.style.display = "flex";
+                });
+            }
+
+            // Modal buttons
+            if (modalCancel) {
+                modalCancel.addEventListener("click", function () {
+                    // Close popup, do nothing
+                    modalOverlay.style.display = "none";
+                    pendingDeleteIds = [];
+                });
+            }
+
+            if (modalConfirm) {
+                modalConfirm.addEventListener("click", async function () {
+                    if (!pendingDeleteIds || pendingDeleteIds.length === 0) {
+                        modalOverlay.style.display = "none";
+                        return;
+                    }
+
+                    try {
+                        await Promise.all(
+                            pendingDeleteIds.map(id =>
+                                fetch(`/delete/${tableName}/${encodeURIComponent(id)}`, {
+                                    method: "POST"
+                                })
+                            )
+                        );
+                        // Hide popup and reload to reflect changes
+                        modalOverlay.style.display = "none";
+                        window.location.reload();
+                    } catch (err) {
+                        console.error("Error deleting records", err);
+                        alert("There was an error deleting records. Please try again.");
+                        modalOverlay.style.display = "none";
+                    }
+                });
+            }
+
+            // Close modal when clicking outside
+            modalOverlay.addEventListener("click", function(e) {
+                if (e.target === modalOverlay) {
+                    modalOverlay.style.display = "none";
+                    pendingDeleteIds = [];
+                }
+            });
+        })();
+    </script>
+    <% } %>
 </body>
 </html>
