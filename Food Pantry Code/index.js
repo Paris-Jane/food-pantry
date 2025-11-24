@@ -7,6 +7,7 @@ const express = require("express"); // EXPRESS: helps with web development
 const session = require("express-session"); // EXPRESS SESSION: needed for session variable. Stored on the server to hold data; Essentially adds a new property to every req object that allows you to store a value per session.
 let path = require("path"); // PATH: helps create safe paths when working with file/folder locations 
 let bodyParser = require("body-parser"); // BODY-PARSER: Allows you to read the body of incoming HTTP requests and makes that data available on req.body
+const { error } = require('console');
 const knex = require("knex")({ // KNEX: allows you to work with SQL databases
     client: "pg",
     connection: { 
@@ -154,6 +155,7 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
                 currentTable: table,
                 records,
                 user: { role: req.session.userLevel },
+                error_message: "",
                 searchTerm: search
             });
         } catch (err) {
@@ -176,6 +178,7 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
                 currentTable: table,
                 records: searchTable,
                 user: { role: req.session.userLevel },
+                error_message: "",
                 searchTerm: searchInput
             });
             })
@@ -186,32 +189,113 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
         });
 
 // DELETING USER
-    app.post("/delete/:table/:id", async (req, res) => { 
-        const userId = req.params.id;
-        const table = req.params.table;
-        const search = "";
+app.post("/delete/:table/:id", async (req, res) => {
+    const { table, id } = req.params;
 
+    const primaryKeyByTable = {
+        customers: "customer_id",
+        employees: "employee_id",
+        orders: "order_id"
+    };
+
+    const primaryKey = primaryKeyByTable[table];
+
+    try {
+        await knex(table).where(primaryKey, id).del();
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.log("Error deleting record:", err.message);
+        res.status(500).json({ error: err.message });
+    }
+    });
+
+
+// ADD USER
+    app.get("/add/:table",(req,res) => { 
+        res.render("add", { table: req.params.table, error_message: ""  });
+    });
+    app.post('/add/:table', (req,res) => { // button that adds the user
+        const table = req.params.table;
+    
         const primaryKeyByTable = {
             customers: "customer_id",
             employees: "employee_id",
             orders: "order_id"
         };
+    
         const primaryKey = primaryKeyByTable[table];
+    
+        const newData = req.body;  // form inputs must match column names
+    
+        knex(table)
+            .insert(newData)
+            .then(() => {
+                res.redirect(`/database?table=${table}`);
+            })
+            .catch(err => {
+                console.log("Error adding record:", err.message);
+                res.status(500).json({ error: err.message });
+            });
+    });
 
-        knex.select().from(table).where(primaryKey, userId).del().then(table => { 
-            res.redirect("/database"); 
+// EDIT USER
+app.get("/edit/:table/:id", async (req, res) => { 
+    const userId = req.params.id;
+    const table = req.params.table;
+
+    const primaryKeyByTable = {
+        customers: "customer_id",
+        employees: "employee_id",
+        orders: "order_id"
+    };
+    const primaryKey = primaryKeyByTable[table];
+
+    knex.select().from(table).where(primaryKey, userId).first().then((user) => {
+        if (!user) {
+            return res.status(404).render("database", {
+                currentTable: table,
+                records: searchTable,
+                user: { role: req.session.userLevel },
+                error_message: "Could not find user to edit.",
+                searchTerm: searchInput
+            });
+        }
+        res.render("edit", { table: table, user, error_message: "", id: userId  });
+    })
+    .catch((err) => {
+        console.error("Error fetching user:", err.message);
+        res.status(500).render("displayUsers", {
+            users: [],
+            error_message: "Unable to load user for editing."
         });
     });
+});
+app.post("/edit/:table/:id", (req, res) => {
+    const table = req.params.table;
+    const userId = req.params.id;
 
-// ADD EMPLOYEE
-    app.get("/addEmp",(req,res) => { 
-        res.render("addEmp");
-    });
-    app.post('/addEmp', (req,res) => { // button that adds the user
-        knex("employees").insert(req.body).then(() => {
-            res.redirect("/database");
+    const primaryKeyByTable = {
+        customers: "customer_id",
+        employees: "employee_id",
+        orders: "order_id"
+    };
+
+    const primaryKey = primaryKeyByTable[table];
+
+    const updateData = req.body;  // form inputs must match column names
+
+    knex(table)
+        .where(primaryKey, userId)
+        .update(updateData)
+        .then(() => {
+            res.redirect(`/database?table=${table}`);
         })
-    });
+        .catch(err => {
+            console.log("Error updating record:", err.message);
+            res.status(500).json({ error: err.message });
+        });
+});
+
 // Tells server to start listening for user & display text in command line
 app.listen(port,() => console.log("the server has started to listen")); 
 
