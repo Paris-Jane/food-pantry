@@ -53,9 +53,7 @@ CREATE TABLE orders (
     date        DATE,
     CONSTRAINT orders_pk PRIMARY KEY (order_id),
     CONSTRAINT orders_customer_fk FOREIGN KEY (customer_id)
-        REFERENCES customers (customer_id),
     CONSTRAINT orders_employee_fk FOREIGN KEY (employee_id)
-        REFERENCES employees (employee_id)
 );
 
 -- =========================================================
