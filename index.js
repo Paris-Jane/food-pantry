@@ -60,7 +60,10 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
     // Global authentication middleware - runs on EVERY request (Needed for login functionality)
         app.use((req, res, next) => {
             // Skip authentication for login routes
-            if (req.path === '/' || req.path === '/login' || req.path === '/logout' || req.path === '/signUp') {
+            const publicPaths = ['/', '/login', '/logout', '/signUp'];
+            const isStaticAsset = req.path.startsWith('/css') || req.path.startsWith('/photos') || req.path === '/favicon.ico';
+
+            if (publicPaths.includes(req.path) || isStaticAsset) {
                 //continue with the request path
                 return next();
             }
