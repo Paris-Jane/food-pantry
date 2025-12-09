@@ -301,5 +301,5 @@ app.post("/edit/:table/:id", (req, res) => {
 });
 
 // Tells server to start listening for user & display text in command line
-app.listen(port,() => console.log("the server has started to listen")); 
+app.listen(port,() => {console.log("the server has started to listen");}); 
 
