@@ -27,6 +27,7 @@ const port = process.env.PORT || 3000; // Creates variable to store port. Uses .
 app.set("view engine", "ejs"); // Allows you to use EJS for the web pages - requires a views folder and all files are .ejs
 app.use("/photos",express.static(path.join(__dirname, "photos"))); // allows you to create path for images (in folder titled "images")
 app.use("/css", express.static(path.join(__dirname, "css"))); // serve shared stylesheet assets
+app.get("/css/styles.css", (req, res) => res.sendFile(path.join(__dirname, "css", "styles.css"))); // explicit CSS route for reliability
 
 // MIDDLEWARE: (Middleware is code that runs between the time the request comes to the server and the time the response is sent back. It allows you to intercept and decide if the request should continue. It also allows you to parse the body request from the html form, handle errors, check authentication, etc.)
 app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a lot easier. Takes inputs and stores them in req.body (for post) or req.query (for get).
@@ -301,5 +302,15 @@ app.post("/edit/:table/:id", (req, res) => {
 });
 
 // Tells server to start listening for user & display text in command line
-app.listen(port,() => {console.log("the server has started to listen");}); 
+const server = app.listen(port, () => {
+    console.log("the server has started to listen");
+});
+
+// Log and keep visibility if the server encounters errors or closes unexpectedly
+server.on("error", (err) => {
+    console.error("Server error:", err);
+});
+server.on("close", () => {
+    console.log("Server closed");
+});
 
