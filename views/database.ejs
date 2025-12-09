@@ -43,15 +43,17 @@
         </div>
 
         <!-- Search Bar -->
-        <form class="search-bar" method="POST" action="/search">
+        <form class="search-bar" method="GET" action="/database" id="search-form">
             <input type="hidden" name="table" value="<%= currentTable %>">
+            <input type="hidden" name="sortColumn" id="sortColumn" value="<%= currentSortColumn || '' %>">
+            <input type="hidden" name="sortOrder" id="sortOrder" value="<%= currentSortOrder || 'asc' %>">
             
             <div class="search-group">
                 <input type="text" name="search" placeholder="Search <%= currentTable %>..." value="<%= searchTerm || '' %>">
                 <select name="col" id="search-options">
                     <% if (records.length > 0) { %>
                         <% Object.keys(records[0]).forEach(column => { %>
-                            <option value="<%= column %>"><%= column %></option>
+                            <option value="<%= column %>" <%= col === column ? 'selected' : '' %>><%= column %></option>
                         <% }) %>
                     <% } %>
                 </select>
@@ -89,7 +91,10 @@
                                 </th>
                             <% } %>
                             <% Object.keys(records[0]).forEach(key => { %>
-                                <th><%= key %></th>
+                                <th class="sortable" data-column="<%= key %>">
+                                    <span><%= key %></span>
+                                    <span class="sort-icon">⇅</span>
+                                </th>
                             <% }) %>
                         <% } else { %>
                             <th>No records found</th>
@@ -311,6 +316,42 @@
                     modalOverlay.style.display = "none";
                     pendingDeleteIds = [];
                 }
+            });
+
+            // Sorting
+            let currentSortColumn = "<%= currentSortColumn || '' %>";
+            let currentSortOrder = "<%= currentSortOrder || 'asc' %>";
+            const sortIcons = document.querySelectorAll('.sort-icon');
+            const sortableHeaders = document.querySelectorAll('.sortable');
+            const searchForm = document.getElementById('search-form');
+
+            function updateSortIcons(column, order) {
+                sortIcons.forEach(icon => {
+                    icon.textContent = '⇅';
+                    icon.classList.remove('sort-active');
+                });
+                const activeHeader = document.querySelector(`th[data-column="${column}"] .sort-icon`);
+                if (activeHeader) {
+                    activeHeader.classList.add('sort-active');
+                    activeHeader.textContent = order === 'asc' ? '↑' : '↓';
+                }
+            }
+
+            if (currentSortColumn) {
+                updateSortIcons(currentSortColumn, currentSortOrder);
+            }
+
+            sortableHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const column = header.getAttribute('data-column');
+                    let order = 'asc';
+                    if (column === currentSortColumn) {
+                        order = currentSortOrder === 'asc' ? 'desc' : 'asc';
+                    }
+                    document.getElementById('sortColumn').value = column;
+                    document.getElementById('sortOrder').value = order;
+                    searchForm.submit();
+                });
             });
         })();
     </script>

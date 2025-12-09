@@ -149,11 +149,16 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
 // DATABASE PAGE
     app.get("/database", async (req, res) => {
         try {
-            const { table = "customers", search = "" } = req.query;
+            const { table = "customers", search = "", col = "", sortColumn = "", sortOrder = "asc" } = req.query;
 
             // get table data
             let records = await knex(table).modify((qb) => {
-                if (search) qb.whereILike("name", `%${search}%`);
+                if (search && col) {
+                    qb.whereILike(col, `%${search}%`);
+                }
+                if (sortColumn) {
+                    qb.orderBy(sortColumn, sortOrder === "desc" ? "desc" : "asc");
+                }
             });
 
             res.render("database", {
@@ -161,37 +166,16 @@ app.use(express.urlencoded({extended:true})); // Makes working with HTML forms a
                 records,
                 user: { role: req.session.userLevel },
                 error_message: "",
-                searchTerm: search
+                searchTerm: search,
+                col,
+                currentSortColumn: sortColumn,
+                currentSortOrder: sortOrder
             });
         } catch (err) {
             console.error(err);
             res.status(500).send("Error fetching data from database");
         }
     });
-
-// SEARCHING USER
-    app.post("/search", (req, res) => { 
-        const searchInput = req.body.search;
-        const searchPattern = `%${searchInput}%`;
-        const table = req.body.table;
-        const col = req.body.col;
-
-        knex(table)
-            .whereRaw(`"${col}"::text ILIKE ?`, [searchPattern])
-            .then(searchTable => {
-            res.render("database", {
-                currentTable: table,
-                records: searchTable,
-                user: { role: req.session.userLevel },
-                error_message: "",
-                searchTerm: searchInput
-            });
-            })
-            .catch(err => {
-            console.error("Error searching user", err);
-            res.status(500).json({ err });
-            });
-        });
 
 // DELETING USER
 app.post("/delete/:table/:id", async (req, res) => {

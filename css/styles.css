@@ -601,6 +601,21 @@ th {
     text-transform: capitalize;
 }
 
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sort-icon {
+    margin-left: 6px;
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.sort-icon.sort-active {
+    color: #2b7cb5;
+}
+
 td {
     padding: 1rem;
     border-bottom: 1px solid #e0e0e0;
