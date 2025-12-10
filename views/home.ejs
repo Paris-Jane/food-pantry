@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utah Food Bank Tracker - Home</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Header -->
@@ -20,94 +21,212 @@
         </nav>
     </header>
 
-    <!-- Welcome -->
-    <section class="welcome">
-        <div class="welcome-content">
-            <h1 class="welcome-title">Welcome to the Utah Food Bank Tracker</h1>
-            <p>
-                We are dedicated to serving the Provo community by providing food and 
-                essential resources to individuals and families in need. Our goal is to 
-                foster hope, dignity, and opportunity for all who come through our doors.
-            </p>
-            <br>
-            <p>
-                The Community Food Pantry Tracker helps us manage donations, recipients, and 
-                donors more efficiently. This system allows us to reduce waste, track the needs 
-                of those we serve, and maintain strong connections with our generous donors.
+    <!-- Hero Section with Background -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to the Utah Food Bank Tracker</h1>
+            <p class="hero-text">
+                Serving the Provo community with dignity, hope, and essential resources
             </p>
         </div>
     </section>
 
-    <!-- User Selection -->
-    <section class="user-selection">
-        <h2 class="title">Get Started</h2>
-        <p class="text">Please select an option below to continue</p>
-        <br><br>
-        
-        <div class="button-group">
-            <a href="/login" class="button">
-                <span class="button-icon">👤</span>
-                <div class="subtitle">Employee Login</div>
-                <p class="text">Access the management system and database</p>
-            </a>
+    <!-- Mission Statement -->
+    <section class="mission">
+        <div class="container">
+            <div class="mission-content">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="mission-text">
+                    We are dedicated to serving the Provo community by providing food and 
+                    essential resources to individuals and families in need. Our goal is to 
+                    foster hope, dignity, and opportunity for all who come through our doors.
+                </p>
+                <p class="mission-text">
+                    The Community Food Pantry Tracker helps us manage donations, recipients, and 
+                    donors more efficiently. This system allows us to reduce waste, track the needs 
+                    of those we serve, and maintain strong connections with our generous donors.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section class="get-started">
+        <div class="container">
+            <h2 class="section-title">Get Started</h2>
+            <p class="section-description">
+                Whether you're an employee managing our resources or a community member seeking assistance, 
+                we're here to help. Choose the option that best describes your needs to continue.
+            </p>
             
-            <a href="/signUp" class="button">
-                <span class="button-icon">📝</span>
-                <div class="subtitle">Recipient Sign-up</div>
-                <p class="text">Register to receive food assistance</p>
-            </a>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Employee Login</h3>
+                        <p class="card-description">
+                            Access the management system to track inventory, manage donations, 
+                            update recipient records, and generate reports. Secure login required.
+                        </p>
+                        <a href="/login" class="card-button">
+                            Login <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title">Recipient Sign-up</h3>
+                        <p class="card-description">
+                            Register to receive food assistance and support services. Complete a simple 
+                            form to create your profile and schedule your first visit with us.
+                        </p>
+                        <a href="/signUp" class="card-button">
+                            Sign Up <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Locations -->
-    <section class="location">
-        <h2 class="title">Our Locations</h2>
-        <div class="locations-grid">
-            <div class="location-card">
-                <h3 class="subtitle">Salt Lake Food Bank</h3>
-                <div class="location-details">
-                    <a href="https://maps.app.goo.gl/mPFJJs6xbKMm58VSA" target="_blank">
-                        3150 S 900 W<br>
-                        South Salt Lake, UT 84119
-                    </a>
-                    <strong>Phone:</strong> (801) 978-2452
-                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+    <!-- Locations Section -->
+    <section class="locations">
+        <div class="container">
+            <h2 class="section-title">Our Locations</h2>
+            <p class="section-description">
+                Visit any of our Utah Food Bank locations across the state. All locations are open Monday through Friday.
+            </p>
+            
+            <div class="locations-grid">
+                <div class="location-card">
+                    <h3 class="location-name">Salt Lake Food Bank</h3>
+                    <div class="location-info">
+                        <p class="location-address">
+                            <a href="https://maps.app.goo.gl/mPFJJs6xbKMm58VSA" target="_blank" rel="noopener">
+                                <i class="fas fa-location-dot"></i>
+                                3150 S 900 W<br>
+                                South Salt Lake, UT 84119
+                            </a>
+                        </p>
+                        <p class="location-phone">
+                            <i class="fas fa-phone"></i>
+                            (801) 978-2452
+                        </p>
+                        <p class="location-hours">
+                            <i class="fas fa-clock"></i>
+                            Mon-Fri: 8am-5pm
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="location-card">
-                <h3 class="subtitle">St. George Food Bank</h3>
-                <div class="location-details">
-                    <a href="https://maps.app.goo.gl/zCjHaV9Ur62bMWnV8" target="_blank">
-                        4416 River Rd<br>
-                        St. George, UT 84790
-                    </a>
-                    <strong>Phone:</strong> (435) 656-9122
-                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+                
+                <div class="location-card">
+                    <h3 class="location-name">St. George Food Bank</h3>
+                    <div class="location-info">
+                        <p class="location-address">
+                            <a href="https://maps.app.goo.gl/zCjHaV9Ur62bMWnV8" target="_blank" rel="noopener">
+                                <i class="fas fa-location-dot"></i>
+                                4416 River Rd<br>
+                                St. George, UT 84790
+                            </a>
+                        </p>
+                        <p class="location-phone">
+                            <i class="fas fa-phone"></i>
+                            (435) 656-9122
+                        </p>
+                        <p class="location-hours">
+                            <i class="fas fa-clock"></i>
+                            Mon-Fri: 8am-5pm
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="location-card">
-                <h3 class="subtitle">Springville Food Bank</h3>
-                <div class="location-details">
-                    <a href="https://maps.app.goo.gl/BZXP51WZ9tuK6zpY8" target="_blank">
-                        1900 W 900 S<br>
-                        Springville, UT 84663
-                    </a>
-                    <strong>Phone:</strong> (801) 887-1277
-                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+                
+                <div class="location-card">
+                    <h3 class="location-name">Springville Food Bank</h3>
+                    <div class="location-info">
+                        <p class="location-address">
+                            <a href="https://maps.app.goo.gl/BZXP51WZ9tuK6zpY8" target="_blank" rel="noopener">
+                                <i class="fas fa-location-dot"></i>
+                                1900 W 900 S<br>
+                                Springville, UT 84663
+                            </a>
+                        </p>
+                        <p class="location-phone">
+                            <i class="fas fa-phone"></i>
+                            (801) 887-1277
+                        </p>
+                        <p class="location-hours">
+                            <i class="fas fa-clock"></i>
+                            Mon-Fri: 8am-5pm
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="location-card">
-                <h3 class="subtitle">Blanding Food Bank</h3>
-                <div class="location-details">
-                    <a href="https://maps.app.goo.gl/2v7iTwSdZHuvtKJ98" target="_blank">
-                        295 E 200 N<br>
-                        Blanding, UT 84511
-                    </a>
-                    <strong>Phone:</strong> (435) 674-5498
-                    <strong>Hours:</strong> Mon-Fri 8am-5pm
+                
+                <div class="location-card">
+                    <h3 class="location-name">Blanding Food Bank</h3>
+                    <div class="location-info">
+                        <p class="location-address">
+                            <a href="https://maps.app.goo.gl/2v7iTwSdZHuvtKJ98" target="_blank" rel="noopener">
+                                <i class="fas fa-location-dot"></i>
+                                295 E 200 N<br>
+                                Blanding, UT 84511
+                            </a>
+                        </p>
+                        <p class="location-phone">
+                            <i class="fas fa-phone"></i>
+                            (435) 674-5498
+                        </p>
+                        <p class="location-hours">
+                            <i class="fas fa-clock"></i>
+                            Mon-Fri: 8am-5pm
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">
+                        <i class="fas fa-hands-helping"></i>
+                        Utah Food Bank Tracker
+                    </h3>
+                    <p class="footer-text">
+                        Dedicated to serving our community with dignity and compassion. 
+                        Together, we can make a difference.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/home">About Us</a></li>
+                        <li><a href="/login">Employee Login</a></li>
+                        <li><a href="/signUp">Recipient Signup</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://secure.utahfoodbank.org/site/Donation2?df_id=2660&2660.donation=form1&chosen=50">Make a Donation</a></li>
+                        <li><a href="https://www.utahfoodbank.org/give/give-time/individual-or-group-volunteering/">Volunteer</a></li>
+                        <li><a href="https://www.utahfoodbank.org/about/">Our Programs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Utah Food Bank Tracker. All rights reserved.</p>
+                <p class="footer-credits">
+                    Developed by Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington
+                </p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
