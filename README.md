@@ -1,21 +1,16 @@
-IS 403 Project 3
-Group 2-14
+<h1>IS 403 Project 3</h1>
+
+<h2>Group 2-14</h2>
 Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington
 
 URL: http://403-project-3-214.is404.net/
 
-Manager access
-'lmoraes', 'admin'
+<h2>Login</h2>
+<h3>Manager access</h3>
+<li>Username: 'lmoraes</li>
+<li>Password: 'admin'</li>
 
-Employee Access
-ejohnson','admin'
+<h3>Employee access</h3>
+<li>Username: 'ejohnson</li>
+<li>Password: 'admin'</li>
 
-
-
-INSTALL:
-    express: npm install --save express
-    knex: npm install -- save knex
-        Postgres: npm install --save pg
-    ejs: npm install --save ejs
-    enviroment variables: npm install dotenv
-    session variables: npm install express-session
