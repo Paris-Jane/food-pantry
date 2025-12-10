@@ -1,1 +1,11 @@
-https://prod.liveshare.vsengsaas.visualstudio.com/join?DD8924F9BC22B7BAE6F581E1D75121C35F19
+IS 403 Project 3
+Group 2-14
+Paris Ward, Lucas Moraes, Parker Sandstrom, and Joshua Ethington
+
+URL: 
+
+Manager access
+'lmoraes', 'admin'
+
+Employee Access
+ejohnson','admin'
