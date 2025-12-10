@@ -178,6 +178,19 @@ app.get("/database", async (req, res) => {
       }
     });
 
+    
+    // format date objects for display (e.g., Sun Jan 07 2024)
+    const formattedRecords = records.map((record) => {
+        return Object.fromEntries(
+            Object.entries(record).map(([key, value]) => {
+                if (value instanceof Date) {
+                    return [key, value.toDateString()];
+                }
+                return [key, value];
+            })
+        );
+    });
+
     res.render("database", {
       currentTable: table,
       records,
